@@ -4,17 +4,45 @@
         "about": "About"
     },
     "TrackingForm": {
+        "title": "Track Your Order",
+        "description": "Enter your order number and email to track your order",
         "fields": {
             "orderNumber": {
                 "label": "Order Number",
-                "placeholder": "Enter order number"
+                "placeholder": "Enter your order number"
             },
             "email": {
                 "label": "Email",
-                "placeholder": "Enter email address"
+                "placeholder": "Enter your email"
             }
         },
         "submit": "Track Order"
+    },
+    "OrderDetails": {
+        "loading": "Loading...",
+        "backToSearch": "Back to Search",
+        "orderTitle": "Order #{orderId}",
+        "placedOn": "Placed on {date}",
+        "customerInfo": {
+            "title": "Customer Information"
+        },
+        "items": {
+            "title": "Order Items",
+            "sku": "SKU",
+            "qty": "Qty"
+        },
+        "payment": {
+            "title": "Payment Method"
+        },
+        "status": {
+            "title": "Order Status"
+        }
+    },
+    "TrackingDetails": {
+        "title": "Tracking Information",
+        "loading": "Loading tracking history...",
+        "failed": "Failed to load tracking history",
+        "code": "Code"
     },
     "Tracking": {
         "title": "Track Your Order",

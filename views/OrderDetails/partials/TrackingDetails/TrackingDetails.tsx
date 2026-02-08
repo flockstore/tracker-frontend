@@ -6,6 +6,7 @@ import { Package2, ChevronDown, ChevronUp } from 'lucide-react'
 import type { TrackingInfo } from '@/types/domain/Order'
 import { getTracking } from '@/actions/GetTracking/GetTracking'
 import type { TrackingHistory } from '@/types/domain/Tracking'
+import { useTranslations } from 'next-intl'
 
 /**
  * TrackingDetails Component Props
@@ -24,6 +25,7 @@ interface TrackingDetailsProps {
  * @returns {JSX.Element} The rendered tracking details.
  */
 export const TrackingDetails = ({ tracking }: TrackingDetailsProps) => {
+  const t = useTranslations('TrackingDetails')
   const [expandedTracking, setExpandedTracking] = useState<string | null>(null)
   const [trackingHistory, setTrackingHistory] = useState<Record<string, TrackingHistory>>({})
   const [loading, setLoading] = useState<Record<string, boolean>>({})
@@ -58,7 +60,7 @@ export const TrackingDetails = ({ tracking }: TrackingDetailsProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-display text-xl font-bold">Tracking Information</CardTitle>
+        <CardTitle className="font-display text-xl font-bold">{t('title')}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {tracking.map((track, index) => (
@@ -84,7 +86,7 @@ export const TrackingDetails = ({ tracking }: TrackingDetailsProps) => {
             {expandedTracking === track.tracking_number && (
               <div className="border-t p-4">
                 {loading[track.tracking_number] ? (
-                  <p className="text-muted-foreground text-sm">Loading tracking history...</p>
+                  <p className="text-muted-foreground text-sm">{t('loading')}</p>
                 ) : trackingHistory[track.tracking_number] ? (
                   <div className="space-y-4">
                     <div>
@@ -109,7 +111,9 @@ export const TrackingDetails = ({ tracking }: TrackingDetailsProps) => {
                               {event.city} • {new Date(event.date).toLocaleString()}
                             </p>
                             {event.code && (
-                              <p className="text-muted-foreground text-xs">Code: {event.code}</p>
+                              <p className="text-muted-foreground text-xs">
+                                {t('code')}: {event.code}
+                              </p>
                             )}
                           </div>
                         </div>
@@ -117,7 +121,7 @@ export const TrackingDetails = ({ tracking }: TrackingDetailsProps) => {
                     </div>
                   </div>
                 ) : (
-                  <p className="text-muted-foreground text-sm">Failed to load tracking history</p>
+                  <p className="text-muted-foreground text-sm">{t('failed')}</p>
                 )}
               </div>
             )}

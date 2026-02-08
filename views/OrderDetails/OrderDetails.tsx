@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import {
   Card,
   CardContent,
@@ -13,6 +14,7 @@ import { Button } from '@/components/ui/Button/Button'
 import { ArrowLeft, Package } from 'lucide-react'
 import type { Order } from '@/types/domain/Order'
 import { TrackingDetails } from './partials/TrackingDetails/TrackingDetails'
+import { useTranslations } from 'next-intl'
 
 /**
  * OrderDetails View Component
@@ -24,6 +26,7 @@ import { TrackingDetails } from './partials/TrackingDetails/TrackingDetails'
  */
 export const OrderDetails = () => {
   const router = useRouter()
+  const t = useTranslations('OrderDetails')
   const [order, setOrder] = useState<Order | null>(null)
 
   useEffect(() => {
@@ -38,7 +41,7 @@ export const OrderDetails = () => {
   if (!order) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-muted-foreground">Loading...</div>
+        <div className="text-muted-foreground">{t('loading')}</div>
       </div>
     )
   }
@@ -48,22 +51,24 @@ export const OrderDetails = () => {
       <div className="mx-auto max-w-4xl space-y-6">
         <Button variant="ghost" onClick={() => router.push('/')} className="mb-4">
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Search
+          {t('backToSearch')}
         </Button>
 
         <Card>
           <CardHeader>
             <CardTitle className="font-display text-2xl font-bold">
-              Order #{order.order_id}
+              {t('orderTitle', { orderId: order.order_id })}
             </CardTitle>
             <CardDescription>
-              Placed on {new Date(order.create_date).toLocaleDateString()}
+              {t('placedOn', {
+                date: new Date(order.create_date).toLocaleDateString(),
+              })}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Customer Information */}
             <div>
-              <h3 className="mb-2 font-semibold">Customer Information</h3>
+              <h3 className="mb-2 font-semibold">{t('customerInfo.title')}</h3>
               <div className="text-muted-foreground space-y-1 text-sm">
                 <p>
                   {order.name} {order.last_name}
@@ -78,14 +83,16 @@ export const OrderDetails = () => {
 
             {/* Order Items */}
             <div>
-              <h3 className="mb-3 font-semibold">Order Items</h3>
+              <h3 className="mb-3 font-semibold">{t('items.title')}</h3>
               <div className="space-y-3">
                 {order.items.map((item, index) => (
                   <div key={index} className="flex items-center gap-4 rounded-lg border p-3">
                     {item.picture ? (
-                      <img
+                      <Image
                         src={item.picture}
                         alt={item.name}
+                        width={64}
+                        height={64}
                         className="h-16 w-16 rounded object-cover"
                       />
                     ) : (
@@ -95,9 +102,13 @@ export const OrderDetails = () => {
                     )}
                     <div className="flex-1">
                       <p className="font-medium">{item.name}</p>
-                      <p className="text-muted-foreground text-sm">SKU: {item.sku}</p>
+                      <p className="text-muted-foreground text-sm">
+                        {t('items.sku')}: {item.sku}
+                      </p>
                     </div>
-                    <div className="text-muted-foreground text-sm">Qty: {item.quantity}</div>
+                    <div className="text-muted-foreground text-sm">
+                      {t('items.qty')}: {item.quantity}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -105,13 +116,13 @@ export const OrderDetails = () => {
 
             {/* Payment Method */}
             <div>
-              <h3 className="mb-2 font-semibold">Payment Method</h3>
+              <h3 className="mb-2 font-semibold">{t('payment.title')}</h3>
               <p className="text-muted-foreground text-sm">{order.payment_method}</p>
             </div>
 
             {/* Order Status */}
             <div>
-              <h3 className="mb-2 font-semibold">Order Status</h3>
+              <h3 className="mb-2 font-semibold">{t('status.title')}</h3>
               <span
                 className={`inline-block rounded-full px-3 py-1 text-sm font-medium ${
                   order.status === 'SHIPPED'

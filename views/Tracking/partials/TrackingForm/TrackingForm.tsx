@@ -68,11 +68,15 @@ export const TrackingForm = () => {
         email: values.email,
       })
 
+      console.log('API Response:', response)
+
       if (response.success) {
+        console.log('Order Data:', response.data)
         // Store order data and navigate to order details
         sessionStorage.setItem('currentOrder', JSON.stringify(response.data))
         router.push(`/order/${response.data.order_id}`)
       } else {
+        console.error('API Error:', response.error)
         setError(response.error.message)
       }
     } catch {
