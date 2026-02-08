@@ -6,11 +6,6 @@ import { cn } from '@/lib/utils'
  *
  * A reusable input component with consistent styling.
  * Supports all standard HTML input attributes.
- *
- * @param {string} className - Additional CSS classes.
- * @param {string} type - Input type (default: 'text').
- * @param {object} props - Standard HTML input props.
- * @returns {JSX.Element} The rendered input element.
  */
 const Input = ({ className, type, ...props }: React.ComponentProps<'input'>) => {
   return (

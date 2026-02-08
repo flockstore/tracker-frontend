@@ -3,6 +3,15 @@
         "title": "Tracker Next",
         "about": "About"
     },
+    "Metadata": {
+        "title": "Flock Store - Order Tracking",
+        "description": "Track your orders in real-time with Flock Store"
+    },
+    "Carriers": {
+        "coordinadora_co": "Coordinadora",
+        "interrapidisimo_co": "Interrapidísimo",
+        "servientrega_co": "Servientrega"
+    },
     "TrackingForm": {
         "title": "Track Your Order",
         "description": "Enter your order number and email to track your order",
@@ -16,7 +25,16 @@
                 "placeholder": "Enter your email"
             }
         },
-        "submit": "Track Order"
+        "submit": "Track Order",
+        "searching": "Searching...",
+        "validation": {
+            "orderNumberRequired": "Order number is required.",
+            "emailInvalid": "Please enter a valid email address."
+        },
+        "errors": {
+            "unexpected": "An unexpected error occurred. Please try again.",
+            "notFound": "Order not found. Please check your order number and email."
+        }
     },
     "OrderDetails": {
         "loading": "Loading...",
@@ -36,6 +54,23 @@
         },
         "status": {
             "title": "Order Status"
+        },
+        "calculatingStatus": "Calculating status...",
+        "statusMessages": {
+            "CREATED": "We are working to deliver your order in the next 24-48 hours",
+            "SHIPPED": "Your order is on its way! Track the delivery above",
+            "COMPLETED": "Your order has been successfully delivered",
+            "CANCELLED": "This order has been cancelled",
+            "INCIDENCE": "There is an issue with your order. Please contact support",
+            "RETURN": "A return has been initiated for this order"
+        },
+        "statusSubtitles": {
+            "CREATED": "Order confirmed",
+            "SHIPPED": "In transit",
+            "COMPLETED": "Delivered successfully",
+            "CANCELLED": "Order cancelled",
+            "INCIDENCE": "Requires attention",
+            "RETURN": "Return in progress"
         }
     },
     "TrackingDetails": {

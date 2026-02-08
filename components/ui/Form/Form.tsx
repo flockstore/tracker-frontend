@@ -30,9 +30,6 @@ const FormFieldContext = React.createContext<FormFieldContextValue>({} as FormFi
  * FormField Component
  *
  * Wraps a form field with context to provide state and validation to its children.
- *
- * @param {ControllerProps<TFieldValues, TName>} props - The controller props from react-hook-form.
- * @returns {JSX.Element} The provided context for the form field.
  */
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,
@@ -50,8 +47,7 @@ const FormField = <
 /**
  * Custom hook to access the form field context.
  *
- * @returns {object} The field state and helpers.
- * @throws {Error} If used outside of a <FormField>.
+ * Provides field state and helpers for form field components.
  */
 const useFormField = () => {
   const fieldContext = React.useContext(FormFieldContext)
@@ -93,7 +89,7 @@ const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
 
     return (
       <FormItemContext.Provider value={{ id }}>
-        <div ref={ref} className={cn('space-y-2', className)} {...props} />
+        <div ref={ref} className={cn('space-y-1', className)} {...props} />
       </FormItemContext.Provider>
     )
   }
@@ -171,6 +167,7 @@ FormDescription.displayName = 'FormDescription'
  * FormMessage Component
  *
  * Renders validation error messages for the field.
+ * Always renders to prevent layout shifts, using opacity to hide/show.
  */
 const FormMessage = React.forwardRef<
   HTMLParagraphElement,
@@ -179,18 +176,18 @@ const FormMessage = React.forwardRef<
   const { error, formMessageId } = useFormField()
   const body = error ? String(error?.message) : children
 
-  if (!body) {
-    return null
-  }
-
   return (
     <p
       ref={ref}
       id={formMessageId}
-      className={cn('text-sm font-medium text-destructive', className)}
+      className={cn(
+        'text-sm font-medium text-destructive transition-opacity min-h-[1.25rem]',
+        body ? 'opacity-100' : 'opacity-0',
+        className
+      )}
       {...props}
     >
-      {body}
+      {body || '\u00A0'}
     </p>
   )
 })
