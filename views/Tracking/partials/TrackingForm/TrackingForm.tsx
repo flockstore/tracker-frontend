@@ -4,6 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Search } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/ui/Button/Button'
 import {
@@ -16,6 +18,7 @@ import {
 } from '@/components/ui/Form/Form'
 import { Input } from '@/components/ui/Input/Input'
 import { useTranslations } from 'next-intl'
+import { getOrder } from '@/actions/GetOrder/GetOrder'
 
 const formSchema = z.object({
   orderNumber: z.coerce.number().min(1, {
@@ -37,14 +40,17 @@ const formSchema = z.object({
  */
 export const TrackingForm = () => {
   const t = useTranslations('TrackingForm')
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      orderNumber: 0, // Default to 0 or empty string if allowed, but coerce.number handles string input
+      orderNumber: 0,
       email: '',
     },
-    mode: 'onTouched', // Validate on touched and dirty as requested
+    mode: 'onTouched',
   })
 
   /**
@@ -52,13 +58,36 @@ export const TrackingForm = () => {
    *
    * @param {z.infer<typeof formSchema>} values - The validated form values.
    */
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      const response = await getOrder({
+        orderId: values.orderNumber.toString(),
+        email: values.email,
+      })
+
+      if (response.success) {
+        // Store order data and navigate to order details
+        sessionStorage.setItem('currentOrder', JSON.stringify(response.data))
+        router.push(`/order/${response.data.order_id}`)
+      } else {
+        setError(response.error.message)
+      }
+    } catch {
+      setError('An unexpected error occurred. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {error && (
+          <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
+        )}
         <FormField
           control={form.control}
           name="orderNumber"
@@ -92,8 +121,9 @@ export const TrackingForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
-          <Search className="mr-2 h-4 w-4" /> {t('submit')}
+        <Button type="submit" className="w-full" disabled={isLoading}>
+          <Search className="mr-2 h-4 w-4" />
+          {isLoading ? 'Searching...' : t('submit')}
         </Button>
       </form>
     </Form>

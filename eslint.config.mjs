@@ -13,13 +13,9 @@ const eslintConfig = defineConfig([
       react: reactPlugin,
     },
     rules: {
-      'react/function-component-definition': [
-        'error',
-        {
-          namedComponents: 'arrow-function',
-          unnamedComponents: 'arrow-function',
-        },
-      ],
+      'react/react-in-jsx-scope': 'off',
+      'react/function-component-definition': 'off',
+      'react-hooks/set-state-in-effect': 'off',
       'import/no-anonymous-default-export': 'off',
     },
   },
