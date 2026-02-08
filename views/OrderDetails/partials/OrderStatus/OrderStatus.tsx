@@ -6,6 +6,10 @@ import type { OrderStatusProps } from '../types'
  *
  * Displays the current order status using the StatusAlert component.
  * Shows loading state and INCIDENCE badge when applicable.
+ *
+ * @param {string} status - The current status of the order
+ * @param {boolean} isLoading - Whether the status calculation is in progress
+ * @param {function} t - Translation function
  */
 export const OrderStatus = ({ status, isLoading, t }: OrderStatusProps) => {
   return (
@@ -13,10 +17,11 @@ export const OrderStatus = ({ status, isLoading, t }: OrderStatusProps) => {
       <h3 className="mb-3 font-semibold">{t('status.title')}</h3>
       <StatusAlert
         status={status}
-        subtitle={t(`statusSubtitles.${status}`) || t('statusSubtitles.CREATED')}
+        title={t(`statusSubtitles.${status}`) || status}
+        subtitle={t(`statusMessages.${status}`) || t('statusMessages.CREATED')}
         isLoading={isLoading}
         loadingText={t('calculatingStatus')}
-        showIncidenceBadge={status === 'RETURN' || status === 'INCIDENCE'}
+        showIncidenceBadge={status === 'INCIDENCE'}
       />
     </div>
   )

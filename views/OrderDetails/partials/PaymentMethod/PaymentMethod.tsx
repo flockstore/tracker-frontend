@@ -9,7 +9,7 @@ export const PaymentMethod = ({ paymentMethod, t }: PaymentMethodProps) => {
   return (
     <div>
       <h3 className="mb-2 font-semibold">{t('payment.title')}</h3>
-      <p className="text-muted-foreground text-sm">{paymentMethod}</p>
+      <p className="text-muted-foreground text-sm">{paymentMethod || t('payment.empty')}</p>
     </div>
   )
 }

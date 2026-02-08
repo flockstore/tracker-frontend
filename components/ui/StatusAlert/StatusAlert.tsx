@@ -10,7 +10,7 @@ import {
 
 export interface StatusAlertProps {
   status: string
-  subtitle: string
+  title?: string
   isLoading?: boolean
   loadingText?: string
   showIncidenceBadge?: boolean
@@ -25,6 +25,7 @@ export interface StatusAlertProps {
 export const StatusAlert = ({
   status,
   subtitle,
+  title,
   isLoading = false,
   loadingText = 'Loading...',
   showIncidenceBadge = false,
@@ -82,7 +83,7 @@ export const StatusAlert = ({
                 <span
                   className={`inline-block rounded-full px-2 py-1 text-xs font-medium ${getStatusBadgeClasses()}`}
                 >
-                  {status}
+                  {title || status}
                 </span>
                 {showIncidenceBadge && (
                   <span className="ml-2 inline-block rounded-full bg-red-100 px-2 py-1 text-xs font-medium text-red-800">

@@ -23,10 +23,15 @@ interface TrackingDetailsProps {
  *
  * Displays tracking information with pre-loaded tracking history
  * for each shipment. Shows carrier logos when available.
+ *
+ * @param {TrackingInfo[]} tracking - List of tracking information
+ * @param {Record<string, TrackingHistory>} preloadedData - Map of tracking history data
+ * @param {boolean} isLoading - Whether tracking data is loading
  */
 export const TrackingDetails = ({ tracking, preloadedData, isLoading }: TrackingDetailsProps) => {
   const t = useTranslations('TrackingDetails')
   const tCarriers = useTranslations('Carriers')
+  const tStatus = useTranslations('OrderDetails.statusSubtitles')
   const [expandedTracking, setExpandedTracking] = useState<string | null>(null)
 
   const handleToggleTracking = (trackingNumber: string) => {
@@ -83,15 +88,14 @@ export const TrackingDetails = ({ tracking, preloadedData, isLoading }: Tracking
                   <div className="flex items-center gap-2">
                     {trackingHistory && (
                       <span
-                        className={`inline-block rounded-full px-2 py-1 text-xs font-medium ${
-                          trackingHistory.global_status === 'COMPLETED'
-                            ? 'bg-green-100 text-green-800'
-                            : trackingHistory.global_status === 'PROCESSING'
-                              ? 'bg-blue-100 text-blue-800'
-                              : 'bg-yellow-100 text-yellow-800'
-                        }`}
+                        className={`inline-block rounded-full px-2 py-1 text-xs font-medium ${trackingHistory.global_status === 'COMPLETED'
+                          ? 'bg-green-100 text-green-800'
+                          : trackingHistory.global_status === 'PROCESSING'
+                            ? 'bg-blue-100 text-blue-800'
+                            : 'bg-yellow-100 text-yellow-800'
+                          }`}
                       >
-                        {trackingHistory.global_status}
+                        {tStatus(trackingHistory.global_status) || trackingHistory.global_status}
                       </span>
                     )}
                     {expandedTracking === track.tracking_number ? (

@@ -26,6 +26,11 @@ import { getOrder } from '@/actions/GetOrder/GetOrder'
  * A form component that allows users to input their order number and email
  * to track their order status. Uses react-hook-form for state management
  * and zod for validation.
+ *
+ * Features:
+ * - Validates order number and email format
+ * - Handles API loading and error states
+ * - Maps raw API errors to user-friendly translated messages
  */
 export const TrackingForm = () => {
   const t = useTranslations('TrackingForm')
@@ -64,8 +69,17 @@ export const TrackingForm = () => {
         sessionStorage.setItem('currentOrder', JSON.stringify(response.data))
         router.push(`/order/${response.data.order_id}`)
       } else {
-        // Use translated error message or fallback to API error
-        setError(response.error.message || t('errors.notFound'))
+        // Map raw errors to translations
+        let errorMessage = response.error.message
+        if (errorMessage === 'fetch failed' || errorMessage === 'Failed to fetch') {
+          errorMessage = t('errors.connectionError')
+        } else if (errorMessage.toLowerCase().includes('timeout')) {
+          errorMessage = t('errors.timeout')
+        } else if (!errorMessage) {
+          errorMessage = t('errors.notFound')
+        }
+
+        setError(errorMessage)
       }
     } catch {
       setError(t('errors.unexpected'))

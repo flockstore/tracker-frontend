@@ -1,7 +1,8 @@
 import type { ApiError } from '@/types/api/Response'
 
 /**
- * API Client Configuration
+ * Base URL for API requests.
+ * Defaults to localhost for development if not specified in environment variables.
  */
 const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:8080'
 

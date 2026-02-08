@@ -1,61 +1,80 @@
-import '@testing-library/jest-dom'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { TrackingForm } from '../views/Tracking/partials/TrackingForm/TrackingForm'
+import { getOrder } from '../actions/GetOrder/GetOrder'
 
-describe('TrackingForm', () => {
-  const renderComponent = () => {
-    return render(<TrackingForm />)
-  }
+// Mock dependencies
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+  }),
+}))
 
-  it('renders correctly', () => {
-    renderComponent()
-    expect(screen.getByLabelText('Order Number')).toBeInTheDocument()
-    expect(screen.getByLabelText('Email')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /track order/i })).toBeInTheDocument()
+jest.mock('../actions/GetOrder/GetOrder')
+
+describe('TrackingForm Partial', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
   })
 
-  it('shows validation error when fields are empty and touched', async () => {
-    renderComponent()
-
-    const orderInput = screen.getByLabelText('Order Number')
-    const emailInput = screen.getByLabelText('Email')
-
-    fireEvent.blur(orderInput)
-    fireEvent.blur(emailInput)
-
-    await waitFor(() => {
-      expect(screen.getByText('Order number is required.')).toBeInTheDocument()
-      expect(screen.getByText('Please enter a valid email address.')).toBeInTheDocument()
-    })
+  it('should render form fields', () => {
+    render(<TrackingForm />)
+    expect(screen.getByLabelText('fields.orderNumber.label')).toBeInTheDocument()
+    expect(screen.getByLabelText('fields.email.label')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'submit' })).toBeInTheDocument()
   })
 
-  it('shows validation error for invalid email', async () => {
-    renderComponent()
+  it('should show validation error for invalid email', async () => {
+    render(<TrackingForm />)
 
-    const emailInput = screen.getByLabelText('Email')
+    const emailInput = screen.getByLabelText('fields.email.label')
     fireEvent.change(emailInput, { target: { value: 'invalid-email' } })
-    fireEvent.blur(emailInput)
+
+    // Trigger submit to show validation
+    fireEvent.click(screen.getByRole('button', { name: 'submit' }))
 
     await waitFor(() => {
-      expect(screen.getByText('Please enter a valid email address.')).toBeInTheDocument()
+      // Zod validation message
+      expect(screen.getByText('validation.emailInvalid')).toBeInTheDocument()
     })
   })
 
-  it('submits form with valid data', async () => {
-    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {})
-    renderComponent()
+  it('should call getOrder on valid submission', async () => {
+    ; (getOrder as jest.Mock).mockResolvedValue({
+      success: true,
+      data: { order_id: '123' }
+    })
 
-    fireEvent.change(screen.getByLabelText('Order Number'), { target: { value: '12345' } })
-    fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'test@example.com' } })
-    fireEvent.click(screen.getByRole('button', { name: /track order/i }))
+    render(<TrackingForm />)
+
+    fireEvent.change(screen.getByLabelText('fields.orderNumber.label'), { target: { value: '123' } })
+    fireEvent.change(screen.getByLabelText('fields.email.label'), { target: { value: 'test@example.com' } })
+
+    fireEvent.click(screen.getByRole('button', { name: 'submit' }))
 
     await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith({
-        orderNumber: 12345,
-        email: 'test@example.com',
+      expect(getOrder).toHaveBeenCalledWith({
+        orderId: '123',
+        email: 'test@example.com'
       })
     })
+  })
 
-    consoleSpy.mockRestore()
+  it('should map fetch failed error to connection error', async () => {
+    ; (getOrder as jest.Mock).mockResolvedValue({
+      success: false,
+      error: { message: 'fetch failed' }
+    })
+
+    render(<TrackingForm />)
+
+    // Fill valid data
+    fireEvent.change(screen.getByLabelText('fields.orderNumber.label'), { target: { value: '123' } })
+    fireEvent.change(screen.getByLabelText('fields.email.label'), { target: { value: 'test@example.com' } })
+
+    fireEvent.click(screen.getByRole('button', { name: 'submit' }))
+
+    await waitFor(() => {
+      expect(screen.getByText('errors.connectionError')).toBeInTheDocument()
+    })
   })
 })

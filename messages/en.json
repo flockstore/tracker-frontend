@@ -1,8 +1,4 @@
 {
-    "HomePage": {
-        "title": "Tracker Next",
-        "about": "About"
-    },
     "Metadata": {
         "title": "Flock Store - Order Tracking",
         "description": "Track your orders in real-time with Flock Store"
@@ -33,7 +29,11 @@
         },
         "errors": {
             "unexpected": "An unexpected error occurred. Please try again.",
-            "notFound": "Order not found. Please check your order number and email."
+            "notFound": "Order not found. Please check your order number and email.",
+            "rateLimitExceeded": "Too many requests. Please try again in {seconds} seconds.",
+            "trackingRetryFailed": "Unable to fetch tracking information after multiple attempts. Please try again later.",
+            "connectionError": "Unable to connect to the server. Please check your internet connection and try again.",
+            "timeout": "The request timed out. Please try again."
         }
     },
     "OrderDetails": {
@@ -50,7 +50,8 @@
             "qty": "Qty"
         },
         "payment": {
-            "title": "Payment Method"
+            "title": "Payment Method",
+            "empty": "Not specified"
         },
         "status": {
             "title": "Order Status"
@@ -70,7 +71,12 @@
             "COMPLETED": "Delivered successfully",
             "CANCELLED": "Order cancelled",
             "INCIDENCE": "Requires attention",
-            "RETURN": "Return in progress"
+            "RETURN": "Return in progress",
+            "PROCESSING": "Processing"
+        },
+        "support": {
+            "buttonText": "Need assistance? Chat with us",
+            "whatsappMessage": "FLK. Solicito ayuda con mi pedido {order}, necesito: "
         }
     },
     "TrackingDetails": {

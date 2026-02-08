@@ -1,0 +1,92 @@
+{
+    "Metadata": {
+        "title": "Flock - Seguimiento de pedidos",
+        "description": "Rastrea tus pedidos en tiempo real con Flock"
+    },
+    "Carriers": {
+        "coordinadora_co": "Coordinadora",
+        "interrapidisimo_co": "Interrapidísimo",
+        "servientrega_co": "Servientrega"
+    },
+    "TrackingForm": {
+        "title": "Rastrea tu pedido",
+        "description": "Ingresa tu número de pedido y tu correo electrónico para hacer seguimiento",
+        "fields": {
+            "orderNumber": {
+                "label": "Número de pedido",
+                "placeholder": "Ingresa tu número de pedido"
+            },
+            "email": {
+                "label": "Correo electrónico",
+                "placeholder": "Ingresa tu correo electrónico"
+            }
+        },
+        "submit": "Rastrear pedido",
+        "searching": "Buscando...",
+        "validation": {
+            "orderNumberRequired": "El número de pedido es obligatorio.",
+            "emailInvalid": "Por favor, ingresa un correo electrónico válido."
+        },
+        "errors": {
+            "unexpected": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo.",
+            "notFound": "No se encontró el pedido. Verifica el número de pedido y el correo electrónico.",
+            "rateLimitExceeded": "Demasiadas solicitudes. Por favor, inténtalo de nuevo en {seconds} segundos.",
+            "trackingRetryFailed": "No fue posible obtener la información de seguimiento después de varios intentos. Inténtalo más tarde.",
+            "connectionError": "No se pudo conectar con el servidor. Revisa tu conexión a internet e inténtalo de nuevo.",
+            "timeout": "La solicitud tardó demasiado tiempo. Por favor, inténtalo de nuevo."
+        }
+    },
+    "OrderDetails": {
+        "loading": "Cargando...",
+        "backToSearch": "Volver a la búsqueda",
+        "orderTitle": "Pedido #{orderId}",
+        "placedOn": "Realizado el {date}",
+        "customerInfo": {
+            "title": "Información del cliente"
+        },
+        "items": {
+            "title": "Productos del pedido",
+            "sku": "SKU",
+            "qty": "Cantidad"
+        },
+        "payment": {
+            "title": "Método de pago",
+            "empty": "No especificado"
+        },
+        "status": {
+            "title": "Estado del pedido"
+        },
+        "calculatingStatus": "Calculando estado...",
+        "statusMessages": {
+            "CREATED": "Estamos preparando tu pedido y será despachado en las próximas 24 horas hábiles (Este tiempo puede variar)",
+            "SHIPPED": "¡Tu pedido va en camino! Ya se encuentra en poder de la transportadora",
+            "COMPLETED": "Tu pedido fue entregado con éxito",
+            "CANCELLED": "Este pedido ha sido cancelado",
+            "INCIDENCE": "Hay un inconveniente con tu pedido. Por favor, contacta a soporte",
+            "RETURN": "Se ha iniciado una devolución de este pedido a nuestra bodega por parte de la transportadora. Esta acción no es reversible."
+        },
+        "statusSubtitles": {
+            "CREATED": "Pedido confirmado",
+            "SHIPPED": "En camino",
+            "COMPLETED": "Entregado con éxito",
+            "CANCELLED": "Pedido cancelado",
+            "INCIDENCE": "Requiere atención",
+            "RETURN": "Devolución en proceso",
+            "PROCESSING": "En proceso"
+        },
+        "support": {
+            "buttonText": "¿Necesitas ayuda? Chatea con nosotros",
+            "whatsappMessage": "FLK. Solicito ayuda con mi pedido {order}, necesito: "
+        }
+    },
+    "TrackingDetails": {
+        "title": "Información de seguimiento",
+        "loading": "Cargando historial de seguimiento...",
+        "failed": "No se pudo cargar el historial de seguimiento",
+        "code": "Código"
+    },
+    "Tracking": {
+        "title": "Rastrea tu pedido",
+        "description": "Ingresa los datos de tu pedido a continuación para consultar su estado."
+    }
+}

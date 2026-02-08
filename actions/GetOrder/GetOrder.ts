@@ -1,6 +1,7 @@
 'use server'
 
 import { apiFetch } from '@/lib/api/client'
+import { checkRateLimit } from '@/lib/rateLimit'
 import type { Order } from '@/types/domain/Order'
 import type { ApiResponse, ApiError } from '@/types/api/Response'
 
@@ -8,7 +9,9 @@ import type { ApiResponse, ApiError } from '@/types/api/Response'
  * Get Order Input
  */
 export interface GetOrderInput {
+  /** The unique order identifier */
   orderId: string
+  /** The email address associated with the order */
   email: string
 }
 
@@ -43,6 +46,18 @@ export async function getOrder(input: GetOrderInput): Promise<ApiResponse<Order>
         error: {
           message: 'Please enter a valid email address',
           ray_id: 'validation-error',
+        },
+      }
+    }
+
+    // Check rate limit
+    const rateLimitResult = checkRateLimit(input.email)
+    if (!rateLimitResult.allowed) {
+      return {
+        success: false,
+        error: {
+          message: `Too many requests. Please try again in ${rateLimitResult.remainingTime} seconds.`,
+          ray_id: 'rate-limit-exceeded',
         },
       }
     }

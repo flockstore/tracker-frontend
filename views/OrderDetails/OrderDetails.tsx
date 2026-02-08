@@ -10,8 +10,11 @@ import {
   CardTitle,
 } from '@/components/ui/Card/Card'
 import { Button } from '@/components/ui/Button/Button'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, MessageCircle } from 'lucide-react'
 import type { Order } from '@/types/domain/Order'
+import { getBanner } from '@/actions/GetBanner/GetBanner'
+import type { Banner } from '@/types/domain/Banner'
+import { SystemBanner } from '@/components/ui/SystemBanner/SystemBanner'
 import { TrackingDetails } from './partials/TrackingDetails/TrackingDetails'
 import { OrderStatus } from './partials/OrderStatus/OrderStatus'
 import { OrderItems } from './partials/OrderItems/OrderItems'
@@ -26,6 +29,12 @@ import type { TrackingHistory } from '@/types/domain/Tracking'
  *
  * Displays complete order information including customer details,
  * order items, and tracking information.
+ *
+ * Features:
+ * - Fetches and displays order details from session storage
+ * - Fetches and displays real-time tracking information
+ * - Shows system banner if available
+ * - Handles loading and error states
  */
 export const OrderDetails = () => {
   const router = useRouter()
@@ -34,9 +43,21 @@ export const OrderDetails = () => {
   const [trackingData, setTrackingData] = useState<Record<string, TrackingHistory>>({})
   const [isLoadingTracking, setIsLoadingTracking] = useState(true)
   const [computedStatus, setComputedStatus] = useState<string>('')
+  const [banner, setBanner] = useState<Banner | null>(null)
+
+  const fetchBanner = useCallback(async () => {
+    const response = await getBanner()
+    if (response.success && response.data) {
+      setBanner(response.data)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchBanner()
+  }, [fetchBanner])
 
   const fetchAllTrackingData = useCallback(
-    async (trackingInfo: Order['tracking']) => {
+    async (trackingInfo: Order['tracking'], orderStatus: string) => {
       setIsLoadingTracking(true)
       const trackingPromises = trackingInfo.map(async (track) => {
         const response = await getTracking({
@@ -52,21 +73,38 @@ export const OrderDetails = () => {
       const results = await Promise.all(trackingPromises)
       const trackingMap: Record<string, TrackingHistory> = {}
       let hasCompleted = false
+      let hasIncident = false
+      let hasReturn = false
 
       results.forEach((result) => {
         if (result.data) {
           trackingMap[result.trackingNumber] = result.data
-          if (result.data.global_status === 'COMPLETED') {
+          const status = result.data.global_status
+          if (status === 'COMPLETED') {
             hasCompleted = true
+          } else if (status === 'INCIDENCE') {
+            hasIncident = true
+          } else if (status === 'RETURN') {
+            hasReturn = true
           }
         }
       })
 
       setTrackingData(trackingMap)
-      setComputedStatus(hasCompleted ? 'COMPLETED' : order?.status || '')
+
+      let finalStatus = orderStatus || ''
+      if (hasIncident) {
+        finalStatus = 'INCIDENCE'
+      } else if (hasReturn) {
+        finalStatus = 'RETURN'
+      } else if (hasCompleted) {
+        finalStatus = 'COMPLETED'
+      }
+
+      setComputedStatus(finalStatus)
       setIsLoadingTracking(false)
     },
-    [order?.status]
+    []
   )
 
   useEffect(() => {
@@ -77,7 +115,7 @@ export const OrderDetails = () => {
 
       // Pre-fetch all tracking data
       if (parsedOrder.tracking && parsedOrder.tracking.length > 0) {
-        fetchAllTrackingData(parsedOrder.tracking)
+        fetchAllTrackingData(parsedOrder.tracking, parsedOrder.status)
       } else {
         setIsLoadingTracking(false)
       }
@@ -120,6 +158,9 @@ export const OrderDetails = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
+                {/* System Banner */}
+                <SystemBanner banner={banner} />
+
                 {/* Order Status */}
                 <OrderStatus status={displayStatus} isLoading={isLoadingTracking} t={t} />
 
@@ -138,6 +179,27 @@ export const OrderDetails = () => {
                     t={t}
                   />
                   <PaymentMethod paymentMethod={order.payment_method} t={t} />
+                </div>
+
+                {/* Support Button */}
+                <div className="flex justify-center pt-2">
+                  <Button
+                    className="w-full gap-2 md:w-auto"
+                    onClick={() => {
+                      const phoneNumber =
+                        process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP_NUMBER || '573104314990'
+                      const message = t('support.whatsappMessage', {
+                        order: order.order_id,
+                      })
+                      window.open(
+                        `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`,
+                        '_blank'
+                      )
+                    }}
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    {t('support.buttonText')}
+                  </Button>
                 </div>
               </CardContent>
             </Card>

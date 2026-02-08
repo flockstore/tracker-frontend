@@ -1,6 +1,7 @@
 'use server'
 
 import { apiFetch } from '@/lib/api/client'
+import { retryWithBackoff } from '@/lib/utils/retry'
 import type { TrackingHistory } from '@/types/domain/Tracking'
 import type { ApiResponse, ApiError } from '@/types/api/Response'
 
@@ -8,7 +9,9 @@ import type { ApiResponse, ApiError } from '@/types/api/Response'
  * Get Tracking Input
  */
 export interface GetTrackingInput {
+  /** The tracking number provided by the courier */
   trackingNumber: string
+  /** The courier code (e.g., 'fedex', 'dhl') */
   courier: string
 }
 
@@ -35,9 +38,17 @@ export async function getTracking(input: GetTrackingInput): Promise<ApiResponse<
       }
     }
 
-    // Fetch tracking history from API
-    const tracking = await apiFetch<TrackingHistory>(
-      `/tracking/${input.trackingNumber}?courier=${encodeURIComponent(input.courier)}`
+    // Fetch tracking history from API with retry logic
+    const maxRetries = parseInt(process.env.TRACKING_MAX_RETRIES || '3')
+    const retryDelay = parseInt(process.env.TRACKING_RETRY_DELAY_MS || '1000')
+
+    const tracking = await retryWithBackoff(
+      () =>
+        apiFetch<TrackingHistory>(
+          `/tracking/${input.trackingNumber}?courier=${encodeURIComponent(input.courier)}`
+        ),
+      maxRetries,
+      retryDelay
     )
 
     return {
