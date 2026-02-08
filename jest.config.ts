@@ -14,7 +14,9 @@ const config: Config = {
   moduleNameMapper: {
     // Handle module aliases (this will be automatically configured for you soon)
     '^@/(.*)$': '<rootDir>/$1',
+    'next-intl': '<rootDir>/__mocks__/next-intl.ts',
   },
+  transformIgnorePatterns: ['/node_modules/(?!(next-intl|lucide-react)/)'],
 }
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

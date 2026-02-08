@@ -2,5 +2,22 @@
     "HomePage": {
         "title": "Tracker Next",
         "about": "About"
+    },
+    "TrackingForm": {
+        "fields": {
+            "orderNumber": {
+                "label": "Order Number",
+                "placeholder": "Enter order number"
+            },
+            "email": {
+                "label": "Email",
+                "placeholder": "Enter email address"
+            }
+        },
+        "submit": "Track Order"
+    },
+    "Tracking": {
+        "title": "Track Your Order",
+        "description": "Enter your order details below to check the status."
     }
 }
