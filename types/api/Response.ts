@@ -7,7 +7,10 @@ export interface ApiError {
   /** Message is the error description */
   message: string
   /** RayID is the unique request identifier for debugging/tracing */
+  /** RayID is the unique request identifier for debugging/tracing */
   ray_id: string
+  /** HTTP status code (optional) */
+  status?: number
 }
 
 /**
@@ -17,13 +20,13 @@ export interface ApiError {
  */
 export type ApiResponse<T> =
   | {
-      success: true
-      data: T
-    }
+    success: true
+    data: T
+  }
   | {
-      success: false
-      error: ApiError
-    }
+    success: false
+    error: ApiError
+  }
 
 /**
  * Validation Error

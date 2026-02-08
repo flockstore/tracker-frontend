@@ -30,7 +30,9 @@ export async function apiFetch<T>(endpoint: string, options?: RequestInit): Prom
     })
 
     if (!response.ok) {
-      const error: ApiError = await response.json()
+      const errorData = await response.json()
+      const error = errorData as ApiError
+      error.status = response.status
       throw error
     }
 

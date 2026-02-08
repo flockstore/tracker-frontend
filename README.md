@@ -1,6 +1,6 @@
 # Flock - Order Tracker
 
-A modern, real-time order tracking application built with Next.js 14. Allows customers to track their orders using their order ID and email address, providing detailed status updates from multiple carriers.
+A modern, real-time order tracking application built with Next.js 16. Allows customers to track their orders using their order ID and email address, providing detailed status updates from multiple carriers.
 
 ## Features
 
@@ -15,7 +15,7 @@ A modern, real-time order tracking application built with Next.js 14. Allows cus
 
 ## Tech Stack
 
-- **Framework**: [Next.js 14](https://nextjs.org/) (App Router)
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/)
 - **Components**: [Shadcn UI](https://ui.shadcn.com/) / [Radix UI](https://www.radix-ui.com/)
@@ -26,7 +26,7 @@ A modern, real-time order tracking application built with Next.js 14. Allows cus
 
 ## Prerequisites
 
-- Node.js 18.17 or later
+- Node.js 20.9.0 or later
 - npm or yarn or pnpm
 
 ## Getting Started
