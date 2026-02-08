@@ -11,6 +11,7 @@ import {
 export interface StatusAlertProps {
   status: string
   title?: string
+  subtitle?: string
   isLoading?: boolean
   loadingText?: string
   showIncidenceBadge?: boolean
